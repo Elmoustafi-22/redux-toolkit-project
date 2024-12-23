@@ -26,6 +26,7 @@ export const blogSlice = createSlice({
         },
 
         handleAddToBlog: (state, action)=> {
+            console.log("handleEditBlog is called");
             console.log(action)
             state.blogList.push({
                 id: nanoid(),
@@ -64,9 +65,31 @@ export const blogSlice = createSlice({
             const { currentBlogId } = payload;
 
             state.currentEditedBlogId = currentBlogId
+         },
+
+         handleEditBlog: (state, action) => {
+            console.log('handleEditBlog is called')
+            let cpyBlogList = [...state.blogList]
+
+            const indexOfCurrentBlog = cpyBlogList.findIndex(blogItem => blogItem.id === state.currentEditedBlogId)
+            
+            cpyBlogList[indexOfCurrentBlog] = {
+                ...cpyBlogList[indexOfCurrentBlog],
+                ...state.formData
+            }
+
+            state.blogList = cpyBlogList;
+            localStorage.setItem('blogList', JSON.stringify(cpyBlogList))
          }
     }
 })
 
-export const {handleInputChange, handleAddToBlog, setBlogListOnIntialLoad, handleDeleteBlog, setCurrentEditedBlogId } = blogSlice.actions
+export const {
+  handleInputChange,
+  handleAddToBlog,
+  setBlogListOnIntialLoad,
+  handleDeleteBlog,
+  setCurrentEditedBlogId,
+  handleEditBlog,
+} = blogSlice.actions;
 export default blogSlice.reducer

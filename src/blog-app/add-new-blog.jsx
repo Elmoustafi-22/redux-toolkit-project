@@ -1,11 +1,11 @@
 import { useDispatch, useSelector } from "react-redux";
-import { handleAddToBlog, handleInputChange } from "../store/slices/blogSlice";
+import { handleAddToBlog, handleEditBlog, handleInputChange, setCurrentEditedBlogId } from "../store/slices/blogSlice";
 
 
 function AddNewBlog(){
     const state = useSelector(state => state.blog)
-
     const dispatch =  useDispatch()
+    const {currentEditedBlogId} = state
 
     function onChangeInput(e){
         dispatch(handleInputChange({
@@ -16,7 +16,19 @@ function AddNewBlog(){
     function handleSubmit(e) {
         e.preventDefault()
 
-        dispatch(handleAddToBlog())
+        if(currentEditedBlogId !== null) {
+            dispatch(handleEditBlog())
+        } else {
+            dispatch(handleAddToBlog())
+        }
+        
+        if(currentEditedBlogId !== null) dispatch(setCurrentEditedBlogId({
+            currentBlogId : null,
+        }))
+        dispatch(handleInputChange({
+            description: '',
+            title: ''
+        }))
     }
 
     console.log(state)
